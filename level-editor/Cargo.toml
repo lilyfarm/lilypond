@@ -1,0 +1,13 @@
+[package]
+name = "level-editor"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = "0.29.1"
+egui = "0.29.1"
+egui_extras = "0.29.1"
+log = "0.4.22"
+wasm-bindgen-futures = "0.4.45"
+web-sys = { version = "0.3.72", features = ["Blob", "Url", "Window", "Document", "Element", "HtmlElement"] }
+js-sys = "0.3.72"

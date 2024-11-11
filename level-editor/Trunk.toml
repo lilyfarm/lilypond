@@ -1,0 +1,5 @@
+[build]
+target = "level-editor.html"
+public_url = "/static"
+filehash = false
+release = true

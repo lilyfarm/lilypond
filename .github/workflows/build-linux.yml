@@ -1,0 +1,42 @@
+name: linux build
+
+on:
+    workflow_dispatch:
+
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        make dependencies
+    
+    - name: Setup build
+      run: |
+        make setup
+    
+    - name: Build project
+      run: |
+        make build
+    
+    - name: Run tests
+      run: |
+        make test
+    
+    - name: Package distribution
+      run: |
+        make dist
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: lily-linux
+        path: lily-linux.zip

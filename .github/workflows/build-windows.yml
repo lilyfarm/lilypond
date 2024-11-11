@@ -1,0 +1,69 @@
+name: windows build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install Meson and Ninja
+      run: |
+        pip install meson ninja
+    
+    - name: Set up MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-gcc-libs
+          mingw-w64-x86_64-gdb
+          mingw-w64-x86_64-pkg-config
+          mingw-w64-x86_64-meson
+          mingw-w64-x86_64-SDL2
+          mingw-w64-x86_64-SDL2_ttf
+          mingw-w64-x86_64-SDL2_mixer
+          mingw-w64-x86_64-gtk3
+          mingw-w64-x86_64-glib2
+          mingw-w64-x86_64-cairo
+          mingw-w64-x86_64-pango
+          mingw-w64-x86_64-adwaita-icon-theme
+          make
+          zip
+    
+    - name: Setup Windows build
+      shell: msys2 {0}
+      run: |
+        make setup
+    
+    - name: Build project for Windows
+      shell: msys2 {0}
+      run: |
+        make build
+    
+    - name: Run tests
+      shell: msys2 {0}
+      run: |
+        make test
+
+    - name: Package distribution
+      shell: msys2 {0}
+      run: |
+        make dist
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: lily-windows
+        path: lily-windows.zip
+    
